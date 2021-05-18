@@ -4,7 +4,14 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
+import com.revature.driver.Driver;
+
 public class Menu {
+	// starting logger
+	final static Logger logger = LogManager.getLogger(Driver.class);
 
 	public static int MenuStart(Scanner sc) {
 
@@ -163,35 +170,37 @@ public class Menu {
 
 	}
 
-	public static void accountFeatures(Scanner sc, ArrayList<Account> account) {
-		System.out.println("Enter 1 to deposit, 2 for withdraw, 3 to transfer ");
+	public static void accountFeatures(Scanner sc, ArrayList<Account> account, int accountID) {
+		System.out.println("Enter 1 to deposit, 2 for withdraw, 3 to transfer or 4 to exit ");
 		int userSelection = sc.nextInt();
 
-		if (userSelection == 1) {
-			preDeposit(sc, account);
-		} else if (userSelection == 2) {
-			preWithdraw(sc, account);
-		} else if (userSelection == 3) {
-			preTransfer(sc, account);
+		while (userSelection != 4) {
+			if (userSelection == 1) {
+				preDeposit(sc, account, accountID);
+			} else if (userSelection == 2) {
+				preWithdraw(sc, account, accountID);
+			} else if (userSelection == 3) {
+				preTransfer(sc, account, accountID);
+			} else {
+				System.out.println("Enter 1 to deposit, 2 for withdraw, 3 to transfer or 4 to exit ");
+				userSelection = sc.nextInt();
+			}
+			System.out.println("Enter 1 to deposit, 2 for withdraw, 3 to transfer or 4 to exit ");
+			userSelection = sc.nextInt();
 		}
-
 	}
 
-	public static void preDeposit(Scanner sc, ArrayList<Account> account) {
+	public static void preDeposit(Scanner sc, ArrayList<Account> account, int accountID) {
 
 		System.out.println("Enter amount to deposit: ");
 		double deposit = sc.nextDouble();
 
-		while (deposit < 0) {
+		while (deposit <= 0) {
 			System.out.println("Please enter positive amount: ");
 			deposit = sc.nextDouble();
 
 		}
-
-		System.out.println("Enter Account ID to receive deposit");
-		int acctID = sc.nextInt();
-
-		deposit(acctID, deposit, account);
+		deposit(accountID, deposit, account);
 
 	}
 
@@ -211,21 +220,18 @@ public class Menu {
 
 	}
 
-	public static void preWithdraw(Scanner sc, ArrayList<Account> account) {
+	public static void preWithdraw(Scanner sc, ArrayList<Account> account, int accountID) {
 
 		System.out.println("Enter amount to withdraw: ");
 		double withdraw = sc.nextDouble();
 
-		while (withdraw < 0) {
+		while (withdraw <= 0) {
 			System.out.println("Please enter positive amount: ");
 			withdraw = sc.nextDouble();
 
 		}
 
-		System.out.println("Enter Account ID to withdraw from");
-		int acctID = sc.nextInt();
-
-		withdraw(acctID, withdraw, account);
+		withdraw(accountID, withdraw, account);
 	}
 
 	public static void withdraw(int acctID, double withdraw, ArrayList<Account> account) {
@@ -243,10 +249,10 @@ public class Menu {
 		}
 	}
 
-	public static void preTransfer(Scanner sc, ArrayList<Account> account) {
+	public static void preTransfer(Scanner sc, ArrayList<Account> account, int accountID) {
 
-		System.out.println("Enter Account ID to transfer from: ");
-		int giverID = sc.nextInt();
+		// implement error checking on valid acct ID's
+
 		System.out.println("Enter Account ID to transfer to: ");
 		int receiverID = sc.nextInt();
 		System.out.println("Enter amount to transfer: ");
@@ -257,7 +263,7 @@ public class Menu {
 			amount = sc.nextDouble();
 
 		}
-		transfer(giverID, receiverID, amount, account);
+		transfer(accountID, receiverID, amount, account);
 	}
 
 	public static void transfer(int giverID, int receiverID, double amount, ArrayList<Account> account) {
@@ -268,6 +274,10 @@ public class Menu {
 				+ account.get(receiverID).getBalance() + " to account ID " + receiverID + " Balance now: $"
 				+ account.get(giverID).getBalance());
 
+		logger.trace("Transferred $" + amount + " from account ID " + giverID + ", Balance now: $"
+				+ account.get(receiverID).getBalance() + " to account ID " + receiverID + " Balance now: $"
+				+ account.get(giverID).getBalance());
+
 	}
 
 	public static void adminLogin(Scanner sc, ArrayList<Account> accounts, ArrayList<Customer> customers) {
@@ -275,45 +285,63 @@ public class Menu {
 		System.out.println(
 				"1. deposit, 2. withdraw, 3. transfer, 4. view pending accounts, 5 cancel accounts, 6 view all accounts, 7 to quit ");
 		int selection = sc.nextInt();
+		int acctID = -1;
 
-		if (selection == 1) {
-			preDeposit(sc, accounts);
-		} else if (selection == 2) {
-			preWithdraw(sc, accounts);
-		} else if (selection == 3) {
-			preTransfer(sc, accounts);
-		} else if (selection == 4) {
+		while (selection != 7) {
 
-			int pendingAccounts = 0;
-			for (int i = 0; i < customers.size(); i++) {
-				if (customers.get(i).getAcctID() == 0) {
-					System.out.println(customers.get(i).toString());
-					pendingAccounts++;
+			if (selection == 1) {
+				System.out.println("Enter account ID for deposit: ");
+				acctID = sc.nextInt();
+				preDeposit(sc, accounts, acctID);
+			} else if (selection == 2) {
+				System.out.println("Enter account ID for withdrawl: ");
+				acctID = sc.nextInt();
+				preWithdraw(sc, accounts, acctID);
+			} else if (selection == 3) {
+				System.out.println("Enter account ID to transfer from: ");
+				acctID = sc.nextInt();
+				preTransfer(sc, accounts, acctID);
+			} else if (selection == 4) {
+
+				int pendingAccounts = 0;
+				for (int i = 0; i < customers.size(); i++) {
+					if (customers.get(i).getAcctID() == 0) {
+						System.out.println(customers.get(i).toString());
+						pendingAccounts++;
+					}
 				}
-			}
 
-			if (pendingAccounts == 0) {
-				System.out.println("No pending accounts.");
-
-			}
-			if (pendingAccounts > 0) {
-				System.out.println("Approve pending customer (y/n)? ");
-				String approval = "";
-				sc.nextLine();
-				approval = sc.nextLine();
-				if (approval.toLowerCase().equals("y")) {
-					approveCustomer(sc, customers, accounts);
+				if (pendingAccounts == 0) {
+					System.out.println("No pending accounts.");
 
 				}
+				if (pendingAccounts > 0) {
+					System.out.println("Approve pending customer (y/n)? ");
+					String approval = "";
+					sc.nextLine();
+					approval = sc.nextLine();
+					if (approval.toLowerCase().equals("y")) {
+						approveCustomer(sc, customers, accounts);
+
+					} else if (approval.toLowerCase().equals("n")) {
+						cancelAccount(sc, accounts, customers);
+					}
+				}
+
+			} else if (selection == 5) {
+				cancelAccount(sc, accounts, customers);
+
+			} else if (selection == 6) {
+				viewAccounts(accounts);
+			} else {
+				System.out.println(
+						"1. deposit, 2. withdraw, 3. transfer, 4. view pending accounts, 5 cancel accounts, 6 view all accounts, 7 to quit ");
+				selection = sc.nextInt();
+
 			}
-
-		} else if (selection == 5) {
-			cancelAccount(sc, accounts, customers);
-
-		} else if (selection == 6) {
-			viewAccounts(accounts);
-		} else if (selection == 7) {
-			// exit cond for potential loop
+			System.out.println(
+					"1. deposit, 2. withdraw, 3. transfer, 4. view pending accounts, 5 cancel accounts, 6 view all accounts, 7 to quit ");
+			selection = sc.nextInt();
 		}
 
 	}
@@ -335,9 +363,9 @@ public class Menu {
 			}
 		}
 
-		for (int i = 0; i < accounts.size(); i++) {
+		for (int i = 0; i < customers.size(); i++) {
 			if (customers.get(i).getAcctID() == acct) {
-				accounts.remove(i);
+				customers.remove(i);
 			}
 		}
 
@@ -346,7 +374,7 @@ public class Menu {
 	public static void approveCustomer(Scanner sc, ArrayList<Customer> customers, ArrayList<Account> accounts) {
 		System.out.println("Enter username to approve: ");
 		String username = sc.nextLine();
-		System.out.println("Enter account number to approve: ");
+		System.out.println("Assign an account number: ");
 		int acctID = sc.nextInt();
 
 		for (int i = 0; i < customers.size(); i++) {

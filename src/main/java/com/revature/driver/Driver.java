@@ -45,7 +45,6 @@ public class Driver {
 
 		// making scanner and logger
 		Scanner sc = new Scanner(System.in);
-		final Logger logger = LogManager.getLogger(Driver.class);
 
 		String filePath = "accounts.txt";
 
@@ -107,14 +106,22 @@ public class Driver {
 			loginSelection = Menu.MenuStart(sc);
 
 			// menu login or apply for acct
-			// 1-3 meet if criteria else login again			
+			// 1-3 meet if criteria else login again
 			if (loginSelection == 1) {
 
 				String username = "";
+				// getting account ID
 				username = Menu.MenuLogin(sc, accountsLoaded, customersLoaded);
+				// getting account ID
+
 				if (!username.isEmpty()) {
+
+					int acctID = hm.get(username);
+
 					Menu.listAccounts(username, hm, accountsLoaded);
-					Menu.accountFeatures(sc, accountsLoaded);
+					
+					Menu.accountFeatures(sc, accountsLoaded, acctID);
+
 				}
 
 			} else if (loginSelection == 2) {
