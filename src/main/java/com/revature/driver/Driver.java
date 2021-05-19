@@ -1,8 +1,5 @@
 package com.revature.driver;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -44,6 +41,7 @@ public class Driver {
 //		customersLoaded.add(prac1);
 
 		// making scanner and logger
+
 		Scanner sc = new Scanner(System.in);
 
 		String filePath = "accounts.txt";
@@ -75,7 +73,7 @@ public class Driver {
 			e.printStackTrace();
 		}
 
-		// make map with username and acc IDs1
+		// make map with username and acc IDs
 
 		// connecting accounts to customers
 		Map<String, Integer> hm = new HashMap<String, Integer>();
@@ -119,7 +117,7 @@ public class Driver {
 					int acctID = hm.get(username);
 
 					Menu.listAccounts(username, hm, accountsLoaded);
-					
+
 					Menu.accountFeatures(sc, accountsLoaded, acctID);
 
 				}

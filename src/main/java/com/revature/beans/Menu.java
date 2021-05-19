@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import com.revature.driver.Driver;
-
 public class Menu {
 	// starting logger
-	final static Logger logger = LogManager.getLogger(Driver.class);
+	final static Logger logger = LogManager.getLogger(Menu.class);
 
 	public static int MenuStart(Scanner sc) {
 
@@ -212,9 +211,12 @@ public class Menu {
 				currentBalance = account.get(i).getBalance();
 				currentBalance = currentBalance + deposit;
 				account.get(i).setBalance(currentBalance);
-				System.out.println(
-						"Deposit of: $" + deposit + " received, Account balance: $" + account.get(i).getBalance());
 
+				String text = "Deposit of: $" + deposit + " received, Account balance: $" + account.get(i).getBalance();
+				System.out.println(text);
+
+				logger.setLevel(Level.TRACE);
+				logger.trace(text);
 			}
 		}
 
@@ -243,8 +245,13 @@ public class Menu {
 				currentBalance = account.get(i).getBalance();
 				currentBalance = currentBalance - withdraw;
 				account.get(i).setBalance(currentBalance);
-				System.out.println("Withdrawl of: $" + withdraw + " completed, Account Number: "
-						+ account.get(i).getAccID() + " balance: $" + account.get(i).getBalance());
+
+				String text = "Withdrawl of: $" + withdraw + " completed, Account Number: " + account.get(i).getAccID()
+						+ " balance: $" + account.get(i).getBalance();
+				System.out.println(text);
+
+				logger.setLevel(Level.TRACE);
+				logger.trace(text);
 			}
 		}
 	}
@@ -270,13 +277,14 @@ public class Menu {
 
 		withdraw(giverID, amount, account);
 		deposit(receiverID, amount, account);
-		System.out.println("Transferred $" + amount + " from account ID " + giverID + ", Balance now: $"
-				+ account.get(receiverID).getBalance() + " to account ID " + receiverID + " Balance now: $"
-				+ account.get(giverID).getBalance());
 
-		logger.trace("Transferred $" + amount + " from account ID " + giverID + ", Balance now: $"
+		String text = "Transferred $" + amount + " from account ID " + giverID + ", Balance now: $"
 				+ account.get(receiverID).getBalance() + " to account ID " + receiverID + " Balance now: $"
-				+ account.get(giverID).getBalance());
+				+ account.get(giverID).getBalance();
+		System.out.println(text);
+
+		logger.setLevel(Level.TRACE);
+		logger.trace(text);
 
 	}
 

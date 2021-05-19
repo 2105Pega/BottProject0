@@ -1,0 +1,6 @@
+TRACE	2021-05-19 16:22:26,558	0	com.revature.beans.Menu	[main]	Withdrawl of: $2.0 completed, Account Number: 1 balance: $577.95
+TRACE	2021-05-19 16:24:52,447	0	com.revature.beans.Menu	[main]	Deposit of: $10.0 received, Account balance: $587.95
+TRACE	2021-05-19 16:24:58,502	6055	com.revature.beans.Menu	[main]	Withdrawl of: $10.0 completed, Account Number: 1 balance: $577.95
+TRACE	2021-05-19 16:25:09,246	16799	com.revature.beans.Menu	[main]	Withdrawl of: $10.0 completed, Account Number: 1 balance: $567.95
+TRACE	2021-05-19 16:25:09,246	16799	com.revature.beans.Menu	[main]	Deposit of: $10.0 received, Account balance: $270.32
+TRACE	2021-05-19 16:25:09,246	16799	com.revature.beans.Menu	[main]	Transferred $10.0 from account ID 1, Balance now: $567.95 to account ID 2 Balance now: $270.32
