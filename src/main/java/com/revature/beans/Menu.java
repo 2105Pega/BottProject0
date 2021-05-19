@@ -124,13 +124,13 @@ public class Menu {
 		String lastName = "";
 
 		System.out.println("Desired username: ");
-		sc.nextLine();
+		username = sc.nextLine();
 		System.out.println("Desired Password: ");
-		sc.nextLine();
+		password = sc.nextLine();
 		System.out.println("First Names: ");
-		sc.nextLine();
+		firstName = sc.nextLine();
 		System.out.println("Last Names");
-		sc.nextLine();
+		lastName = sc.nextLine();
 
 		Customer acctApplication = new Customer(username, password, firstName, lastName, 0);
 		customer.add(acctApplication);
